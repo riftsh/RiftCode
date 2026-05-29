@@ -56,9 +56,20 @@ export interface ModelConfig {
   enabled?: boolean
 }
 
-// Built-in models
+// Built-in models - Updated for 2026
 export const BUILT_IN_MODELS: AIModel[] = [
-  // OpenAI
+  // ========== OpenAI (2026 Models) ==========
+  {
+    id: 'gpt-4.5',
+    name: 'GPT-4.5',
+    provider: 'openai',
+    capabilities: ['chat', 'completion', 'streaming', 'vision', 'functionCalling', 'jsonMode', 'deepResearch'],
+    contextWindow: 256000,
+    costPer1KTokens: 0.01,
+    latency: 'medium',
+    strength: ['general-purpose', 'vision', 'deep research', 'reasoning'],
+    weakness: ['cost']
+  },
   {
     id: 'gpt-4o',
     name: 'GPT-4o',
@@ -82,40 +93,84 @@ export const BUILT_IN_MODELS: AIModel[] = [
     weakness: ['complex reasoning']
   },
   {
-    id: 'o1-preview',
-    name: 'o1 Preview',
+    id: 'o3-pro',
+    name: 'o3 Pro',
+    provider: 'openai',
+    capabilities: ['chat', 'completion', 'reasoning', 'deepResearch'],
+    contextWindow: 200000,
+    costPer1KTokens: 0.03,
+    latency: 'slow',
+    strength: ['complex reasoning', 'problem solving', 'math', 'coding'],
+    weakness: ['speed', 'no streaming', 'cost']
+  },
+  {
+    id: 'o3-mini',
+    name: 'o3 Mini',
     provider: 'openai',
     capabilities: ['chat', 'completion', 'reasoning'],
     contextWindow: 128000,
-    costPer1KTokens: 0.015,
-    latency: 'slow',
-    strength: ['complex reasoning', 'problem solving', 'math'],
-    weakness: ['speed', 'no streaming']
+    costPer1KTokens: 0.005,
+    latency: 'medium',
+    strength: ['reasoning', 'coding', 'balanced'],
+    weakness: ['no vision']
   },
-  // Anthropic
+  // ========== Anthropic (2026 Models) ==========
   {
-    id: 'claude-3-5-sonnet',
-    name: 'Claude 3.5 Sonnet',
+    id: 'claude-sonnet-4',
+    name: 'Claude Sonnet 4',
     provider: 'anthropic',
-    capabilities: ['chat', 'completion', 'streaming', 'vision', 'functionCalling'],
+    capabilities: ['chat', 'completion', 'streaming', 'vision', 'functionCalling', 'computerUse'],
     contextWindow: 200000,
     costPer1KTokens: 0.003,
     latency: 'medium',
-    strength: ['coding', 'analysis', 'long context'],
+    strength: ['coding', 'analysis', 'long context', 'computer use'],
     weakness: ['cost']
   },
   {
-    id: 'claude-3-5-opus',
-    name: 'Claude 3.5 Opus',
+    id: 'claude-opus-4',
+    name: 'Claude Opus 4',
     provider: 'anthropic',
-    capabilities: ['chat', 'completion', 'streaming', 'vision', 'functionCalling'],
+    capabilities: ['chat', 'completion', 'streaming', 'vision', 'functionCalling', 'computerUse', 'deepResearch'],
     contextWindow: 200000,
     costPer1KTokens: 0.015,
     latency: 'slow',
-    strength: ['complex reasoning', 'coding', 'analysis'],
+    strength: ['complex reasoning', 'coding', 'analysis', 'deep research'],
     weakness: ['speed', 'cost']
   },
-  // Google
+  {
+    id: 'claude-haiku-4',
+    name: 'Claude Haiku 4',
+    provider: 'anthropic',
+    capabilities: ['chat', 'completion', 'streaming'],
+    contextWindow: 200000,
+    costPer1KTokens: 0.0008,
+    latency: 'fast',
+    strength: ['fast', 'long context', 'cheap'],
+    weakness: ['no vision', 'simpler tasks']
+  },
+  // ========== Google (2026 Models) ==========
+  {
+    id: 'gemini-3-flash',
+    name: 'Gemini 3.0 Flash',
+    provider: 'google',
+    capabilities: ['chat', 'completion', 'streaming', 'vision', 'longContext', 'webSearch'],
+    contextWindow: 2000000,
+    costPer1KTokens: 0.00005,
+    latency: 'fast',
+    strength: ['ultra long context', 'fast', 'ultra cheap', 'web search'],
+    weakness: ['coding accuracy']
+  },
+  {
+    id: 'gemini-2.5-pro',
+    name: 'Gemini 2.5 Pro',
+    provider: 'google',
+    capabilities: ['chat', 'completion', 'streaming', 'vision', 'longContext', 'webSearch', 'thinking'],
+    contextWindow: 1000000,
+    costPer1KTokens: 0.00125,
+    latency: 'medium',
+    strength: ['thinking', 'coding', 'analysis', 'web search'],
+    weakness: ['cost']
+  },
   {
     id: 'gemini-2-flash',
     name: 'Gemini 2.0 Flash',
@@ -124,13 +179,60 @@ export const BUILT_IN_MODELS: AIModel[] = [
     contextWindow: 1000000,
     costPer1KTokens: 0.000075,
     latency: 'fast',
-    strength: ['long context', 'fast', 'cheap', 'web search'],
+    strength: ['long context', 'fast', 'cheap'],
     weakness: ['coding accuracy']
   },
-  // Groq
+  // ========== xAI ==========
   {
-    id: 'llama-3-1-70b',
-    name: 'Llama 3.1 70B',
+    id: 'grok-3',
+    name: 'Grok 3',
+    provider: 'xai',
+    capabilities: ['chat', 'completion', 'streaming', 'webSearch', 'reasoning'],
+    contextWindow: 131072,
+    costPer1KTokens: 0.002,
+    latency: 'medium',
+    strength: ['web search', 'real-time info', 'reasoning'],
+    weakness: ['limited context']
+  },
+  // ========== DeepSeek ==========
+  {
+    id: 'deepseek-v3',
+    name: 'DeepSeek V3',
+    provider: 'deepseek',
+    capabilities: ['chat', 'completion', 'streaming', 'functionCalling'],
+    contextWindow: 64000,
+    costPer1KTokens: 0.00014,
+    latency: 'fast',
+    strength: ['coding', 'reasoning', 'ultra cheap'],
+    weakness: ['shorter context']
+  },
+  {
+    id: 'deepseek-r1',
+    name: 'DeepSeek R1',
+    provider: 'deepseek',
+    capabilities: ['chat', 'completion', 'reasoning'],
+    contextWindow: 64000,
+    costPer1KTokens: 0.00055,
+    latency: 'medium',
+    strength: ['reasoning', 'math', 'coding', 'open weights'],
+    weakness: ['no streaming', 'shorter context']
+  },
+  // ========== Mistral ==========
+  {
+    id: 'mistral-large-3',
+    name: 'Mistral Large 3',
+    provider: 'mistral',
+    capabilities: ['chat', 'completion', 'streaming', 'vision', 'functionCalling'],
+    contextWindow: 128000,
+    costPer1KTokens: 0.002,
+    latency: 'medium',
+    strength: ['coding', 'multilingual', 'function calling'],
+    weakness: ['reasoning']
+  },
+  // ========== Groq (Fast Inference) ==========
+  {
+    id: 'llama-4-70b',
+    name: 'Llama 4 70B',
     provider: 'groq',
     capabilities: ['chat', 'completion', 'streaming'],
     contextWindow: 128000,
@@ -138,6 +240,29 @@ export const BUILT_IN_MODELS: AIModel[] = [
     latency: 'fast',
     strength: ['fast', 'open weights'],
     weakness: ['reasoning', 'coding']
+  },
+  {
+    id: 'qwen-3-72b',
+    name: 'Qwen 3 72B',
+    provider: 'groq',
+    capabilities: ['chat', 'completion', 'streaming', 'multilingual'],
+    contextWindow: 128000,
+    costPer1KTokens: 0.0007,
+    latency: 'fast',
+    strength: ['multilingual', 'fast', 'good reasoning'],
+    weakness: ['coding']
+  },
+  // ========== OpenRouter Aggregated ==========
+  {
+    id: 'anthropic-sonnet-4-latest',
+    name: 'Claude Sonnet 4 (Latest)',
+    provider: 'openrouter',
+    capabilities: ['chat', 'completion', 'streaming', 'vision', 'functionCalling'],
+    contextWindow: 200000,
+    costPer1KTokens: 0.003,
+    latency: 'medium',
+    strength: ['coding', 'analysis', 'reliable'],
+    weakness: ['cost']
   }
 ]
 
