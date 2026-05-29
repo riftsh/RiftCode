@@ -501,28 +501,37 @@ async function requestChanges(pr: PullRequest): Promise<void> {
 // ============================================================================
 
 function addIssueDecorations(issues: AIReviewIssue[]): void {
-  const editor = vscode.window.activeTextEditor
-  if (!editor) return
-
-  // Create decorations for each issue
+  // Process each issue
   for (const issue of issues) {
     const uri = vscode.Uri.file(issue.file)
-    
-    // Open file and add decoration
-    vscode.window.showTextDocument(uri).then(doc => {
-      const range = new vscode.Range(
-        new vscode.Position(issue.line - 1, 0),
-        new vscode.Position(issue.line - 1, 100)
-      )
 
-      const decoration = vscode.window.createTextEditorDecorationType({
-        range: range,
-        hoverMessage: `${issue.type.toUpperCase()}: ${issue.message}\n\n${issue.suggestion || ''}`,
-        overviewRulerColor: getSeverityColor(issue.severity),
-        overviewRulerLane: vscode.OverviewRulerLane.Full
+    // Open file and apply decoration to the correct editor
+    vscode.workspace.openTextDocument(uri).then(doc => {
+      vscode.window.showTextDocument(doc, vscode.ViewColumn.One).then(editor => {
+        const range = new vscode.Range(
+          new vscode.Position(issue.line - 1, 0),
+          new vscode.Position(issue.line - 1, 100)
+        )
+
+        // Determine color based on severity
+        let color: vscode.Color
+        switch (issue.severity) {
+          case 'critical': color = new vscode.Color(255, 0, 0, 1); break
+          case 'high': color = new vscode.Color(255, 165, 0, 1); break
+          case 'medium': color = new vscode.Color(255, 255, 0, 1); break
+          default: color = new vscode.Color(0, 128, 0, 1)
+        }
+
+        const decoration = vscode.window.createTextEditorDecorationType({
+          range: range,
+          hoverMessage: `${issue.type.toUpperCase()}: ${issue.message}\n\n${issue.suggestion || ''}`,
+          overviewRulerColor: color,
+          overviewRulerLane: vscode.OverviewRulerLane.Full
+        })
+
+        // Apply decoration to the correct editor (the one we just opened)
+        editor.setDecorations(decoration, [{ range }])
       })
-
-      editor.setDecorations(decoration, [{ range }])
     })
   }
 }

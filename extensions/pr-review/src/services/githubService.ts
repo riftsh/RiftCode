@@ -77,8 +77,8 @@ export class GitHubService {
         const origin = remotes.find(r => r.name === 'origin')
         
         if (origin && origin.fetchUrl) {
-          // Parse GitHub URL
-          const match = origin.fetchUrl.match(/github\.com[/:](.+)\/(.+)\.git/)
+          // Parse GitHub URL - handle both .git and non-.git URLs
+          const match = origin.fetchUrl.match(/github\.com[/:](.+)\/(.+?)(?:\.git)?$/)
           if (match) {
             return { owner: match[1], repo: match[2] }
           }

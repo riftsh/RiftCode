@@ -286,15 +286,33 @@ export function activate(context: vscode.ExtensionContext) {
       return
     }
 
-    // Send to RiftAI
-    try {
-      // Try to send to RiftAI extension
-      await vscode.commands.executeCommand('rift-ai.chat', {
-        context: `Explain this error:\n\n**File:** ${error.file}\n**Line:** ${error.line}\n**Error:** ${error.message}\n**Source:** ${error.source}`,
-        code: getErrorCodeContext(error)
-      })
+    // Check if RiftAI extension is available
+    const riftAIExtension = vscode.extensions.getExtension('riftcode.rift-ai')
+    if (!riftAIExtension) {
+      // Fallback: show error details if RiftAI not available
+      showErrorDetails(error)
+      vscode.window.showInformationMessage('RiftAI extension not found. Showing error details instead.')
+      return
+    }
 
+    // Build the error context for AI
+    const errorContext = `**File:** ${error.file}\n**Line:** ${error.line}\n**Error:** ${error.message}\n**Source:** ${error.source}`
+
+    // Try to use RiftAI - open chat and send message
+    try {
+      // RiftAI uses rift-ai.new.sidebarTitle.plusButtonClicked to open chat
+      await vscode.commands.executeCommand('rift-ai.new.plusButtonClicked')
+
+      // Give time for chat to open, then we could paste the context
+      // Note: Direct message injection requires the rift-ai API
       vscode.window.showInformationMessage('Opening RiftAI to explain error...')
+
+      // As fallback, open document to show error
+      const doc = await vscode.workspace.openTextDocument(error.file)
+      await vscode.window.showTextDocument(doc, { selection: new vscode.Range(
+        new vscode.Position(error.line - 1, 0),
+        new vscode.Position(error.line - 1, 100)
+      )})
     } catch (e) {
       // If RiftAI not available, show error details
       showErrorDetails(error)
@@ -309,15 +327,26 @@ export function activate(context: vscode.ExtensionContext) {
       return
     }
 
+    // Check if RiftAI extension is available
+    const riftAIExtension = vscode.extensions.getExtension('riftcode.rift-ai')
+    if (!riftAIExtension) {
+      showErrorDetails(error)
+      vscode.window.showInformationMessage('RiftAI extension not found. Showing error details instead.')
+      return
+    }
+
     try {
-      // Send to RiftAI for fixing
-      await vscode.commands.executeCommand('rift-ai.chat', {
-        context: `Fix this error:\n\n**File:** ${error.file}\n**Line:** ${error.line}\n**Error:** ${error.message}\n\nPlease provide a fix.`,
-        code: getErrorCodeContext(error),
-        action: 'fix'
-      })
+      // Open RiftAI chat
+      await vscode.commands.executeCommand('rift-ai.new.plusButtonClicked')
 
       vscode.window.showInformationMessage('Opening RiftAI to fix error...')
+
+      // Open the file and highlight the error line
+      const doc = await vscode.workspace.openTextDocument(error.file)
+      await vscode.window.showTextDocument(doc, { selection: new vscode.Range(
+        new vscode.Position(error.line - 1, 0),
+        new vscode.Position(error.line - 1, 100)
+      )})
     } catch (e) {
       showErrorDetails(error)
     }
@@ -334,7 +363,13 @@ export function activate(context: vscode.ExtensionContext) {
     const searchQuery = encodeURIComponent(`${error.message} ${error.source}`)
     const url = `https://www.google.com/search?q=${searchQuery}`
 
-    await vscode.commands.executeCommand('riftcode.browser.navigate', url)
+    // Open in RiftBrowser or default browser
+    try {
+      await vscode.commands.executeCommand('riftcode.browser.navigate', url)
+    } catch {
+      // Fallback: open in default browser
+      await vscode.env.openExternal(vscode.Uri.parse(url))
+    }
   })
 
   // Toggle highlights command
