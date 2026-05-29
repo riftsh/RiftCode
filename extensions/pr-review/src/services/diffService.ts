@@ -101,7 +101,7 @@ export class DiffService {
       if (line.startsWith('@@')) {
         // Parse hunk header
         const match = line.match(/@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@/)
-        if (match) {
+        if (match && match.length >= 2) {
           oldLine = parseInt(match[1], 10)
           newLine = parseInt(match[2], 10)
         }
@@ -213,7 +213,7 @@ export class DiffService {
     for (const line of lines) {
       if (line.startsWith('@@')) {
         const match = line.match(/@@ -(\d+)/)
-        if (match) {
+        if (match && match.length >= 1) {
           currentLine = parseInt(match[1], 10)
         }
       }

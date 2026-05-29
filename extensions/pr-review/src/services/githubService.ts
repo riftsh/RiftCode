@@ -79,7 +79,7 @@ export class GitHubService {
         if (origin && origin.fetchUrl) {
           // Parse GitHub URL - handle both .git and non-.git URLs
           const match = origin.fetchUrl.match(/github\.com[/:](.+)\/(.+?)(?:\.git)?$/)
-          if (match) {
+          if (match && match.length >= 3) {
             return { owner: match[1], repo: match[2] }
           }
         }

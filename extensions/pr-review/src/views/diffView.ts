@@ -146,8 +146,8 @@ export class DiffView {
 
     for (const line of lines) {
       if (line.startsWith('@@')) {
-        const match = line.match(/@@ -(\\d+)(?:,(\\d+))? \\+(\\d+)(?:,(\\d+))? @@/)
-        if (match) {
+        const match = line.match(/@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/)
+        if (match && match.length >= 3) {
           oldLine = parseInt(match[1], 10)
           newLine = parseInt(match[3], 10)
           html += `<div class="diff-line hunk-header"><span class="line-content">${line}</span></div>`
