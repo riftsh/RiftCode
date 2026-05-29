@@ -1,0 +1,223 @@
+{
+  "name": "pr-review",
+  "displayName": "PR Review",
+  "description": "AI-Powered Pull Request Review in your editor. Review PRs without leaving RiftCode with intelligent AI analysis.",
+  "version": "1.0.0-2026",
+  "publisher": "riftcode",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Developer Tools",
+    "AI"
+  ],
+  "keywords": [
+    "pr",
+    "pull-request",
+    "review",
+    "github",
+    "gitlab",
+    "ai",
+    "code-review"
+  ],
+  "activationEvents": [
+    "onCommand:pr-review.open",
+    "onCommand:pr-review.listPRs",
+    "onView:pr-review.prList",
+    "workspaceContains:**/.git/**"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "views": {
+      "explorer": [
+        {
+          "id": "pr-review.prList",
+          "name": "Pull Requests",
+          "icon": "$(git-pull-request)",
+          "when": "workspaceHasRepository"
+        }
+      ]
+    },
+    "viewsContainer": {
+      "explorer": {
+        "id": "pr-review",
+        "title": "PR Review"
+      }
+    },
+    "commands": [
+      {
+        "command": "pr-review.open",
+        "title": "Open PR Review",
+        "category": "PR Review",
+        "icon": "$(git-pull-request)"
+      },
+      {
+        "command": "pr-review.listPRs",
+        "title": "List Pull Requests",
+        "category": "PR Review"
+      },
+      {
+        "command": "pr-review.aiReview",
+        "title": "AI Review PR",
+        "category": "PR Review",
+        "icon": "$(robot)"
+      },
+      {
+        "command": "pr-review.aiExplain",
+        "title": "AI Explain Changes",
+        "category": "PR Review",
+        "icon": "$(lightbulb)"
+      },
+      {
+        "command": "pr-review.aiFix",
+        "title": "AI Suggest Fix",
+        "category": "PR Review",
+        "icon": "$(wrench)"
+      },
+      {
+        "command": "pr-review.securityScan",
+        "title": "AI Security Scan",
+        "category": "PR Review",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "pr-review.summarize",
+        "title": "AI Summarize PR",
+        "category": "PR Review",
+        "icon": "$(list-ordered)"
+      },
+      {
+        "command": "pr-review.openDiff",
+        "title": "Open Diff View",
+        "category": "PR Review",
+        "icon": "$(diff)"
+      },
+      {
+        "command": "pr-review.addComment",
+        "title": "Add Comment",
+        "category": "PR Review",
+        "icon": "$(comment)"
+      },
+      {
+        "command": "pr-review.approve",
+        "title": "Approve PR",
+        "category": "PR Review",
+        "icon": "$(check)"
+      },
+      {
+        "command": "pr-review.requestChanges",
+        "title": "Request Changes",
+        "category": "PR Review",
+        "icon": "$(x)"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "pr-review.open",
+        "key": "ctrl+shift+alt+p",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "pr-review.aiReview",
+        "key": "ctrl+shift+alt+r",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "pr-review.aiExplain",
+        "key": "ctrl+shift+alt+x",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "pr-review.listPRs",
+          "when": "view == pr-review.prList",
+          "group": "navigation"
+        },
+        {
+          "command": "pr-review.aiReview",
+          "when": "view == pr-review.prList",
+          "group": "navigation@1"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "pr-review.aiExplain",
+          "when": "editorHasSelection",
+          "group": "pr-review@1"
+        },
+        {
+          "command": "pr-review.aiFix",
+          "when": "editorHasSelection",
+          "group": "pr-review@2"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "PR Review",
+      "properties": {
+        "prReview.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable PR Review extension"
+        },
+        "prReview.githubToken": {
+          "type": "string",
+          "default": "",
+          "description": "GitHub Personal Access Token"
+        },
+        "prReview.gitlabToken": {
+          "type": "string",
+          "default": "",
+          "description": "GitLab Personal Access Token"
+        },
+        "prReview.aiEnabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable AI-powered review features"
+        },
+        "prReview.autoReview": {
+          "type": "boolean",
+          "default": false,
+          "description": "Auto-run AI review on PR open"
+        },
+        "prReview.maxFilesPerReview": {
+          "type": "number",
+          "default": 50,
+          "description": "Maximum files to include in AI review"
+        },
+        "prReview.includeSecurityScan": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include security scan in AI review"
+        },
+        "prReview.includePerformanceScan": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include performance scan in AI review"
+        }
+      }
+    },
+    "authentication": [
+      {
+        "id": "github",
+        "label": "GitHub"
+      },
+      {
+        "id": "gitlab",
+        "label": "GitLab"
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.0.0"
+  }
+}

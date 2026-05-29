@@ -1,0 +1,174 @@
+{
+  "name": "error-lens",
+  "displayName": "Error Lens",
+  "description": "Inline error highlighting with AI integration for RiftCode. Highlights errors, warnings, and info with inline messages and provides AI-powered explanations.",
+  "version": "1.0.0-2026",
+  "publisher": "riftcode",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Linters"
+  ],
+  "activationEvents": [
+    "onLanguage",
+    "onCommand:error-lens.showErrors",
+    "onCommand:error-lens.explainWithAI",
+    "onCommand:error-lens.fixWithAI"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "error-lens.showErrors",
+        "title": "Show All Errors",
+        "category": "Error Lens"
+      },
+      {
+        "command": "error-lens.nextError",
+        "title": "Next Error",
+        "category": "Error Lens"
+      },
+      {
+        "command": "error-lens.previousError",
+        "title": "Previous Error",
+        "category": "Error Lens"
+      },
+      {
+        "command": "error-lens.explainWithAI",
+        "title": "Explain with RiftAI",
+        "category": "Error Lens",
+        "icon": "$(bot)"
+      },
+      {
+        "command": "error-lens.fixWithAI",
+        "title": "Fix with RiftAI",
+        "category": "Error Lens",
+        "icon": "$(lightbulb)"
+      },
+      {
+        "command": "error-lens.searchOnline",
+        "title": "Search Error Online",
+        "category": "Error Lens"
+      },
+      {
+        "command": "error-lens.toggleHighlights",
+        "title": "Toggle Error Highlights",
+        "category": "Error Lens"
+      },
+      {
+        "command": "error-lens.clearAll",
+        "title": "Clear All Decorations",
+        "category": "Error Lens"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "error-lens.nextError",
+        "key": "ctrl+shift+alt+e",
+        "mac": "cmd+shift+alt+e",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "error-lens.previousError",
+        "key": "ctrl+shift+alt+shift+e",
+        "mac": "cmd+shift+alt+shift+e",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "error-lens.explainWithAI",
+        "key": "ctrl+shift+alt+a",
+        "mac": "cmd+shift+alt+a",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "error-lens.explainWithAI",
+          "when": "editorHasErrorDiagnostics",
+          "group": "error-lens@1"
+        },
+        {
+          "command": "error-lens.fixWithAI",
+          "when": "editorHasErrorDiagnostics",
+          "group": "error-lens@2"
+        },
+        {
+          "command": "error-lens.searchOnline",
+          "when": "editorHasErrorDiagnostics",
+          "group": "error-lens@3"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "error-lens.showErrors",
+          "when": "editorHasErrorDiagnostics"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Error Lens",
+      "properties": {
+        "errorLens.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable error highlighting"
+        },
+        "errorLens.includeWarnings": {
+          "type": "boolean",
+          "default": true,
+          "description": "Include warnings in highlighting"
+        },
+        "errorLens.includeInfo": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include info messages in highlighting"
+        },
+        "errorLens.delay": {
+          "type": "number",
+          "default": 0,
+          "description": "Delay before showing decorations (ms)"
+        },
+        "errorLens.showMessageOnLine": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show message at end of error line"
+        },
+        "errorLens.addAnnotation": {
+          "type": "boolean",
+          "default": true,
+          "description": "Add inline annotation for errors"
+        },
+        "errorLens.aiIntegration": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable AI integration with RiftAI"
+        },
+        "errorLens.annotationColor": {
+          "type": "string",
+          "default": "editorError.foreground",
+          "description": "Color for error annotations"
+        },
+        "errorLens.backgroundOpacity": {
+          "type": "number",
+          "default": 0.1,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Background opacity for error highlighting"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.0.0"
+  }
+}
